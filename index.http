@@ -1,3 +1,4 @@
+# Añadir un comercio
 POST http://localhost:3000/api/store
 Content-Type: application/json
 
@@ -12,5 +13,35 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:3000/api/comercios
+# Obtener todos los comercios
+GET http://localhost:3000/api/store?order=true
+Content-Type: application/json
+
+###
+
+# Obtener un comercio por su CIF
+GET http://localhost:3000/api/store/B45678901
+Content-Type: application/json
+
+###
+
+# Modificar un comercio por su CIF
+PUT http://localhost:3000/api/store/B45678901
+Content-Type: application/json
+
+{
+  "contactNumber": "+34 915 324 478",
+  "adress": "Calle Embajadores, 12, 28043, España"
+}
+
+###
+
+# Eliminar un comercio por su CIF [Borrado Lógico]
+DELETE http://localhost:3000/api/store/B45678901?deleteType=logical
+Content-Type: application/json
+
+###
+
+# Eliminar un comercio por su CIF [Borrado Físico]
+DELETE http://localhost:3000/api/store/B45678901?deleteType=physical
 Content-Type: application/json
