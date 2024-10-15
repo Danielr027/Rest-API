@@ -1,0 +1,16 @@
+POST http://localhost:3000/api/store
+Content-Type: application/json
+
+{
+  "storeName": "StreetWearCo",
+  "CIF": "B45678901",
+  "adress": "Plaza del Estilo, 12, 46001 Valencia, España",
+  "email": "ventas@streetwearco.com",
+  "contactNumber": "+34 961 234 567",
+  "pageId": 4
+}
+
+###
+
+GET http://localhost:3000/api/comercios
+Content-Type: application/json
