@@ -7,6 +7,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());  // Funcionalidad para convertir los modelos a JSON automáticamente
+app.use(express.static('./storage'));
 
 const port = process.env.PORT || 3000;
 

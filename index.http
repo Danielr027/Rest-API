@@ -45,3 +45,67 @@ Content-Type: application/json
 # Eliminar un comercio por su CIF [Borrado Físico]
 DELETE http://localhost:3000/api/store/B45678901?deleteType=physical
 Content-Type: application/json
+
+# ===================== EJERCICIO SEMANA 2 ===================== #
+
+###
+
+# Añadir una página web de comercio
+POST http://localhost:3000/api/webStore
+Content-Type: application/json
+
+{
+    "city": "Madrid",
+    "activity": "Venta de libros",
+    "title": "Librería Central",
+    "resume": "La mejor librería de la ciudad.",
+    "textsArray": ["Amplia selección de libros", "Ofertas semanales"],
+    "imagesArray": ["http://example.com/image1.jpg", "http://example.com/image2.jpg"],
+    "reviews": {
+        "scoring": 4.5,
+        "totalRatings": 100,
+        "reviews": ["Excelente servicio", "Gran variedad de libros"]
+    },
+    "pageId": 1
+}
+
+###
+
+# Obtener todos las páginas web
+GET http://localhost:3000/api/webStore
+Content-Type: application/json
+
+###
+
+# Modificar una página web por su pageid
+PUT http://localhost:3000/api/webStore/1
+Content-Type: application/json
+
+{
+  "city": "Barcelona"
+}
+
+###
+
+# Hacer el patch de la imagen
+PATCH http://localhost:3000/api/webStore/6717d67082e66136791ec1e7
+Content-Type: multipart/form-data; boundary=Boundry
+
+--Boundry
+Content-Disposition: form-data; name="image"; filename="doraemon.jpg"
+Content-Type: image/jpg
+
+< ./doraemon.jpg
+--Boundry--
+
+###
+
+# Eliminar una página web por su pageid [Borrado Lógico]
+DELETE http://localhost:3000/api/webStore/1
+Content-Type: application/json
+
+###
+
+# Eliminar una página web por su pageid [Borrado Físico]
+DELETE http://localhost:3000/api/webStore/1
+Content-Type: application/json
