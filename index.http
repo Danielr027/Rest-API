@@ -1,94 +1,130 @@
-# Añadir un comercio
+# ===================== CREACIÓN DE USUARIOS Y LOGIN ===================== #
+
+### Registro de usuario básico
+POST http://localhost:3000/api/user/register
+Content-Type: application/json
+
+{
+    "nombre": "Usuario Básico",
+    "email": "basico@example.com",
+    "password": "Password123",
+    "edad": 25,
+    "ciudad": "Valencia",
+    "intereses": ["cine", "música"]
+}
+
+### Login de usuario básico
+POST http://localhost:3000/api/user/login
+Content-Type: application/json
+
+{
+    "email": "basico@example.com",
+    "password": "Password123"
+}
+
+### Registro de usuario admin
+POST http://localhost:3000/api/user/register
+Content-Type: application/json
+
+{
+    "nombre": "Administrador",
+    "email": "admin@example.com",
+    "password": "Admin1234",
+    "edad": 30,
+    "ciudad": "Madrid",
+    "intereses": ["lectura", "deporte"]
+}
+
+### Inicia sesión como administrador
+POST http://localhost:3000/api/user/login
+Content-Type: application/json
+
+{
+    "email": "admin@example.com",
+    "password": "Admin1234"
+}
+
+# ===================== OPERACIONES CON COMERCIO ===================== #
+
+### Añadir comercio (solo accesible por admin)
 POST http://localhost:3000/api/store
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI4YTEyMmM2NDg2NjMxYWI2NzUiLCJyb2xlIjoidXNlciIsImlhdCI6MTczMDQ4NTAwMCwiZXhwIjoxNzMwNDkyMjAwfQ.QufsQ0p4f4mrdBBZm11HGVuEDorf6oHEjjHD4r7Dwdg
 Content-Type: application/json
 
 {
-  "storeName": "StreetWearCo",
-  "CIF": "B45678901",
-  "adress": "Plaza del Estilo, 12, 46001 Valencia, España",
-  "email": "ventas@streetwearco.com",
-  "contactNumber": "+34 961 234 567",
-  "pageId": 4
+    "storeName": "TiendaAdmin",
+    "CIF": "A12345678",
+    "address": "Calle del Comercio, 100, Madrid",
+    "email": "contacto@tiendaadmin.com",
+    "contactNumber": "+34 600 123 456",
+    "pageId": 432452
 }
 
-###
-
-# Obtener todos los comercios
+### Obtener todos los comercios
 GET http://localhost:3000/api/store?order=true
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI1NzEyMmM2NDg2NjMxYWI2NzMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA0ODEwNjAsImV4cCI6MTczMDQ4ODI2MH0.vMKxlmIVo6zHUHWjmo0Uqzlc2KzJtU2ajnT9r-1Fwkk
 Content-Type: application/json
 
-###
-
-# Obtener un comercio por su CIF
-GET http://localhost:3000/api/store/B45678901
+### Obtener un comercio específico por su CIF
+GET http://localhost:3000/api/store/A12345678
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI1NzEyMmM2NDg2NjMxYWI2NzMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA0ODEwNjAsImV4cCI6MTczMDQ4ODI2MH0.vMKxlmIVo6zHUHWjmo0Uqzlc2KzJtU2ajnT9r-1Fwkk
 Content-Type: application/json
 
-###
-
-# Modificar un comercio por su CIF
-PUT http://localhost:3000/api/store/B45678901
+### Modificar comercio (solo accesible por admin)
+PUT http://localhost:3000/api/store/A12345678
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI1NzEyMmM2NDg2NjMxYWI2NzMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA0ODEwNjAsImV4cCI6MTczMDQ4ODI2MH0.vMKxlmIVo6zHUHWjmo0Uqzlc2KzJtU2ajnT9r-1Fwkk
 Content-Type: application/json
 
 {
-  "contactNumber": "+34 915 324 478",
-  "adress": "Calle Embajadores, 12, 28043, España"
+  "adress": "Avenida del Comercio, 150, Madrid",
+  "contactNumber": "+34 600 123 789"
 }
 
-###
-
-# Eliminar un comercio por su CIF [Borrado Lógico]
-DELETE http://localhost:3000/api/store/B45678901?deleteType=logical
+### Eliminar comercio por CIF [Borrado Lógico]
+DELETE http://localhost:3000/api/store/A12345678?deleteType=logical
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI1NzEyMmM2NDg2NjMxYWI2NzMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA0ODEwNjAsImV4cCI6MTczMDQ4ODI2MH0.vMKxlmIVo6zHUHWjmo0Uqzlc2KzJtU2ajnT9r-1Fwkk
 Content-Type: application/json
 
-###
+# ===================== GESTIÓN DE PÁGINA WEB DE COMERCIO ===================== #
 
-# Eliminar un comercio por su CIF [Borrado Físico]
-DELETE http://localhost:3000/api/store/B45678901?deleteType=physical
-Content-Type: application/json
-
-# ===================== EJERCICIO SEMANA 2 ===================== #
-
-###
-
-# Añadir una página web de comercio
+### Crear una página web de comercio (solo accesible por admin)
 POST http://localhost:3000/api/webStore
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI1NzEyMmM2NDg2NjMxYWI2NzMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA0ODEwNjAsImV4cCI6MTczMDQ4ODI2MH0.vMKxlmIVo6zHUHWjmo0Uqzlc2KzJtU2ajnT9r-1Fwkk
 Content-Type: application/json
 
 {
     "city": "Madrid",
-    "activity": "Venta de libros",
-    "title": "Librería Central",
-    "resume": "La mejor librería de la ciudad.",
-    "textsArray": ["Amplia selección de libros", "Ofertas semanales"],
-    "imagesArray": ["http://example.com/image1.jpg", "http://example.com/image2.jpg"],
+    "activity": "Venta de tecnología",
+    "title": "Tech Store",
+    "resume": "La mejor tecnología a tu alcance.",
+    "textsArray": ["Gadgets de última generación", "Ofertas especiales"],
+    "imagesArray": ["http://example.com/tech1.jpg", "http://example.com/tech2.jpg"],
     "reviews": {
-        "scoring": 4.5,
-        "totalRatings": 100,
-        "reviews": ["Excelente servicio", "Gran variedad de libros"]
+        "scoring": 4.7,
+        "totalRatings": 85,
+        "reviews": ["Excelente calidad", "Buen servicio"]
     },
-    "pageId": 1
+    "storeId": "A12345678"
 }
 
-###
-
-# Obtener todos las páginas web
+### Obtener todas las páginas web de comercio
 GET http://localhost:3000/api/webStore
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI1NzEyMmM2NDg2NjMxYWI2NzMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA0ODEwNjAsImV4cCI6MTczMDQ4ODI2MH0.vMKxlmIVo6zHUHWjmo0Uqzlc2KzJtU2ajnT9r-1Fwkk
 Content-Type: application/json
 
-###
-
-# Modificar una página web por su pageid
-PUT http://localhost:3000/api/webStore/1
+### Modificar una página web por su storeId (solo accesible por el comercio propietario)
+PUT http://localhost:3000/api/webStore/670e8628a4ae3d3c6a823592
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI1NzEyMmM2NDg2NjMxYWI2NzMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA0ODEwNjAsImV4cCI6MTczMDQ4ODI2MH0.vMKxlmIVo6zHUHWjmo0Uqzlc2KzJtU2ajnT9r-1Fwkk
 Content-Type: application/json
 
 {
-  "city": "Barcelona"
+  "city": "Barcelona",
+  "title": "Tech Store Barcelona"
 }
 
-###
-
-# Hacer el patch de la imagen
+### Subir imagen a la página web (solo accesible por el comercio propietario)
 PATCH http://localhost:3000/api/webStore/6717d67082e66136791ec1e7
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI1NzEyMmM2NDg2NjMxYWI2NzMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA0ODQzNzMsImV4cCI6MTczMDQ5MTU3M30.UBdwhCfb8T990pcDJW5WMfPYFQS0pz2kZ1oczOSApG0
 Content-Type: multipart/form-data; boundary=Boundry
 
 --Boundry
@@ -98,14 +134,29 @@ Content-Type: image/jpg
 < ./doraemon.jpg
 --Boundry--
 
-###
-
-# Eliminar una página web por su pageid [Borrado Lógico]
-DELETE http://localhost:3000/api/webStore/1
+### Eliminar una página web de comercio por storeId [Borrado Lógico]
+DELETE http://localhost:3000/api/webStore/6717d67082e66136791ec1e7
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI1NzEyMmM2NDg2NjMxYWI2NzMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA0ODEwNjAsImV4cCI6MTczMDQ4ODI2MH0.vMKxlmIVo6zHUHWjmo0Uqzlc2KzJtU2ajnT9r-1Fwkk
 Content-Type: application/json
 
-###
+# ===================== OPERACIONES CON USUARIOS ===================== #
 
-# Eliminar una página web por su pageid [Borrado Físico]
-DELETE http://localhost:3000/api/webStore/1
+### Modificar datos del usuario básico (requiere token)
+PUT http://localhost:3000/api/user
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI1NzEyMmM2NDg2NjMxYWI2NzMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA0ODEwNjAsImV4cCI6MTczMDQ4ODI2MH0.vMKxlmIVo6zHUHWjmo0Uqzlc2KzJtU2ajnT9r-1Fwkk
+Content-Type: application/json
+
+{
+    "nombre": "Usuario Básico Modificado",
+    "ciudad": "Barcelona"
+}
+
+### Eliminar usuario básico (requiere token)
+DELETE http://localhost:3000/api/user
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI1NzEyMmM2NDg2NjMxYWI2NzMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA0ODEwNjAsImV4cCI6MTczMDQ4ODI2MH0.vMKxlmIVo6zHUHWjmo0Uqzlc2KzJtU2ajnT9r-1Fwkk
+Content-Type: application/json
+
+### Obtener correos de usuarios interesados
+GET http://localhost:3000/api/store/67251492251f3b3d4cd814a3/interested-users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI1NzEyMmM2NDg2NjMxYWI2NzMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA0ODEwNjAsImV4cCI6MTczMDQ4ODI2MH0.vMKxlmIVo6zHUHWjmo0Uqzlc2KzJtU2ajnT9r-1Fwkk
 Content-Type: application/json

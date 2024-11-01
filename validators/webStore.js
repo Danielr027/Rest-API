@@ -46,31 +46,26 @@ const validatorCreateWebStore = [
         .isArray().withMessage("reviews.reviews debe ser un array de cadenas")
         .custom((arr) => arr.every(item => typeof item === 'string')).withMessage("Cada reseña debe ser una cadena de texto"),
     
-    check("pageId")
-        .exists().withMessage("El pageId es requerido")
-        .notEmpty().withMessage("El pageId no puede estar vacío")
-        .isInt().withMessage("El pageId debe ser un número entero"),
-    
     // Middleware para manejar los resultados de la validación
     (req, res, next) => validateResults(req, res, next)
 ];
 
-// Validador para visitar una página web por su ID
+// Validador para visitar una página web por su storeId
 const validatorGetWebStore = [
-    param("pageId")
-        .exists().withMessage("El parámetro pageId es requerido")
-        .notEmpty().withMessage("El parámetro pageId no puede estar vacío")
-        .isInt().withMessage("El parámetro pageId debe ser un número entero"),
+    param("storeId")
+        .exists().withMessage("El parámetro storeId es requerido")
+        .notEmpty().withMessage("El parámetro storeId no puede estar vacío")
+        .isMongoId().withMessage("El parámetro storeId debe ser un MongoID válido"),
     
     (req, res, next) => validateResults(req, res, next)
 ];
 
 // Validador para modificar una página web de comercio
 const validatorUpdateWebStore = [
-    param("pageId")
-        .exists().withMessage("El parámetro pageId es requerido")
-        .notEmpty().withMessage("El parámetro pageId no puede estar vacío")
-        .isInt().withMessage("El parámetro pageId debe ser un número entero"),
+    param("storeId")
+        .exists().withMessage("El parámetro storeId es requerido")
+        .notEmpty().withMessage("El parámetro storeId no puede estar vacío")
+        .isMongoId().withMessage("El parámetro storeId debe ser un MongoID válido"),
 
     check("city")
         .optional()
@@ -116,31 +111,22 @@ const validatorUpdateWebStore = [
 
 // Validador para archivar una página web de comercio
 const validatorArchiveWebStore = [
-    param("pageId")
-        .exists().withMessage("El parámetro pageId es requerido")
-        .notEmpty().withMessage("El parámetro pageId no puede estar vacío")
-        .isInt().withMessage("El parámetro pageId debe ser un número entero"),
+    param("storeId")
+        .exists().withMessage("El parámetro storeId es requerido")
+        .notEmpty().withMessage("El parámetro storeId no puede estar vacío")
+        .isMongoId().withMessage("El parámetro storeId debe ser un MongoID válido"),
     
     (req, res, next) => validateResults(req, res, next)
 ];
 
 // Validador para eliminar una página web de comercio
 const validatorDeleteWebStore = [
-    param("pageId")
-        .exists().withMessage("El parámetro pageId es requerido")
-        .notEmpty().withMessage("El parámetro pageId no puede estar vacío")
-        .isInt().withMessage("El parámetro pageId debe ser un número entero"),
+    param("storeId")
+        .exists().withMessage("El parámetro storeId es requerido")
+        .notEmpty().withMessage("El parámetro storeId no puede estar vacío")
+        .isMongoId().withMessage("El parámetro storeId debe ser un MongoID válido"),
     
     (req, res, next) => validateResults(req, res, next)
 ];
 
-const validatorGetMongoID = [
-    param("pageId")
-        .exists().withMessage("El parámetro pageId es requerido")
-        .notEmpty().withMessage("El parámetro pageId no puede estar vacío")
-        .isMongoId().withMessage("El parámetro pageId debe ser un número entero"),
-    
-    (req, res, next) => validateResults(req, res, next)
-];
-
-module.exports = { validatorCreateWebStore, validatorGetWebStore, validatorUpdateWebStore, validatorArchiveWebStore, validatorDeleteWebStore, validatorGetMongoID };
+module.exports = { validatorCreateWebStore, validatorGetWebStore, validatorUpdateWebStore, validatorArchiveWebStore, validatorDeleteWebStore };

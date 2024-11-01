@@ -1,5 +1,7 @@
-const { default: mongoose } = require('mongoose');
+const { tokenSign } = require("../utils/handleJwt");
 const { storeModel } = require('../models');
+const { userModel } = require("../models");
+const handleHttpError = require("../utils/handleHttpError");
 
 // Obtener comercios
 const getStores = async (req, res) => {
@@ -22,11 +24,35 @@ const getStore = async (req, res) => {
 }
 
 // Subir comercios
+// const createStore = async (req, res) => {
+//     try {
+//         const { body } = req;
+//         const store = await storeModel.create(body); // Crear el comercio
+
+//         // Generar un JWT específico para el comercio
+//         const token = tokenSign({ _id: store._id, CIF: store.CIF });
+//         res.send({ store, token }); // Enviar el comercio y el token
+//     } catch (error) {
+//         handleHttpError(res, "ERROR_CREATING_STORE");
+//     }
+// };
 const createStore = async (req, res) => {
-    const { body } = req;
-    const data = await storeModel.create(body); // Subimos el modelo definido en formato json
-    res.send(data);
-}
+    try {
+        const { body } = req;
+        console.log("Datos recibidos para crear comercio:", body); // Datos enviados
+
+        const store = await storeModel.create(body); // Crear el comercio
+
+        // Generar un JWT específico para el comercio
+        const token = tokenSign({ _id: store._id, CIF: store.CIF });
+        res.send({ store, token }); // Enviar el comercio y el token
+    } catch (error) {
+        console.error("Error en createStore:", error.message); // Muestra el mensaje de error específico
+        console.error("Detalle del error:", error.errors); // Muestra los detalles de error de validación
+        handleHttpError(res, "ERROR_CREATING_STORE");
+    }
+};
+
 
 // Modificar un comercio a partir de su CIF
 const updateStore = async (req, res) => {
@@ -49,5 +75,23 @@ const deleteStore = async (req, res) => {
     }
 };
 
+const getInterestedUserEmails = async (req, res) => {
+    try {
+        const { storeId } = req.params;
+
+        // Verificar que el storeId es válido y realizar la búsqueda
+        const interestedUsers = await userModel.find({
+            permiteRecibirOfertas: true,
+            intereses: storeId
+        }).select('email');
+        
+        res.send(interestedUsers);
+
+    } catch (error) {
+        console.error("Error en getInterestedUsers:", error);
+        handleHttpError(res, "ERROR_GETTING_INTERESTED_USERS");
+    }
+};
+
 // Exportamos las funciones de consulta como paquetes de módulo
-module.exports = { getStores, getStore, createStore, updateStore, deleteStore };
+module.exports = { getStores, getStore, createStore, updateStore, deleteStore, getInterestedUserEmails };

@@ -31,7 +31,7 @@ const validatorCreateStore = [
     check("pageId")
         .exists().withMessage("El ID de la página es requerido")
         .notEmpty().withMessage("El ID de la página no puede estar vacío")
-        .isMongoId().withMessage("El ID de la página debe ser un MongoID válido"),
+        .isNumeric().withMessage("El ID de la página debe ser un número"),
     
     (req, res, next) => validateResults(req, res, next)
 ];
