@@ -20,9 +20,21 @@ const { getStores, createStore, getStore, updateStore, deleteStore, getIntereste
  *     tags: [Stores]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: order
+ *         schema:
+ *           type: string
+ *         description: Ordenar por CIF
  *     responses:
  *       200:
  *         description: Lista de comercios
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Store'
  */
 router.get("/", authMiddleware, getStores);
 
@@ -39,10 +51,16 @@ router.get("/", authMiddleware, getStores);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Store'
+ *             $ref: '#/components/schemas/StoreCreate'
  *     responses:
  *       200:
  *         description: Comercio creado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Store'
+ *       400:
+ *         description: Error al crear el comercio
  */
 router.post("/", authMiddleware, checkRole(["admin"]), validatorCreateStore, createStore);
 
@@ -64,6 +82,12 @@ router.post("/", authMiddleware, checkRole(["admin"]), validatorCreateStore, cre
  *     responses:
  *       200:
  *         description: Comercio encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Store'
+ *       404:
+ *         description: Comercio no encontrado
  */
 router.get("/:CIF", authMiddleware, validatorGetStore, getStore);
 
@@ -87,10 +111,18 @@ router.get("/:CIF", authMiddleware, validatorGetStore, getStore);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Store'
+ *             $ref: '#/components/schemas/StoreUpdate'
  *     responses:
  *       200:
  *         description: Comercio actualizado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Store'
+ *       400:
+ *         description: Error al actualizar el comercio
+ *       404:
+ *         description: Comercio no encontrado
  */
 router.put("/:CIF", authMiddleware, checkRole(["admin"]), validatorUpdateStore, updateStore);
 
@@ -109,9 +141,16 @@ router.put("/:CIF", authMiddleware, checkRole(["admin"]), validatorUpdateStore, 
  *         schema:
  *           type: string
  *         description: CIF del comercio
+ *       - in: query
+ *         name: deleteType
+ *         schema:
+ *           type: string
+ *         description: Tipo de borrado (physical o logical)
  *     responses:
  *       200:
  *         description: Comercio eliminado exitosamente
+ *       404:
+ *         description: Comercio no encontrado
  */
 router.delete("/:CIF", authMiddleware, checkRole(["admin"]), validatorDeleteStore, deleteStore);
 
@@ -130,9 +169,25 @@ router.delete("/:CIF", authMiddleware, checkRole(["admin"]), validatorDeleteStor
  *         schema:
  *           type: string
  *         description: ID del comercio
+ *       - in: query
+ *         name: topic
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Tema de interés
  *     responses:
  *       200:
  *         description: Lista de emails de usuarios interesados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *       400:
+ *         description: Tema de interés requerido
+ *       404:
+ *         description: Comercio o webStore no encontrado
  */
 router.get("/:storeId/interested-users", authMiddleware, checkRole(['merchant']), getInterestedUserEmails);
 
