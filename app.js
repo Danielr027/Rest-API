@@ -24,3 +24,5 @@ dbConnect();
 
 // Rutas
 app.use("/api", require("./routes"));
+
+module.exports = app;

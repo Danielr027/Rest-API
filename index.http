@@ -5,11 +5,11 @@ POST http://localhost:3000/api/user/register
 Content-Type: application/json
 
 {
-    "nombre": "Usuario Básico",
-    "email": "basico@example.com",
-    "password": "Password123",
-    "edad": 25,
-    "ciudad": "Valencia",
+    "nombre": "Daniel",
+    "email": "daniel@gmail.com",
+    "password": "qwertyui",
+    "edad": 19,
+    "ciudad": "Madrid",
     "intereses": ["cine", "música"]
 }
 
@@ -18,8 +18,8 @@ POST http://localhost:3000/api/user/login
 Content-Type: application/json
 
 {
-    "email": "basico@example.com",
-    "password": "Password123"
+    "email": "daniel@gmail.com",
+    "password": "qwertyui"
 }
 
 ### Registro de usuario admin
@@ -48,69 +48,70 @@ Content-Type: application/json
 
 ### Añadir comercio (solo accesible por admin)
 POST http://localhost:3000/api/store
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI4YTEyMmM2NDg2NjMxYWI2NzUiLCJyb2xlIjoidXNlciIsImlhdCI6MTczMDQ4NTAwMCwiZXhwIjoxNzMwNDkyMjAwfQ.QufsQ0p4f4mrdBBZm11HGVuEDorf6oHEjjHD4r7Dwdg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzQzNWY0YmE0Zjc5MTgzN2E4NTJmYmQiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzI0NzcxMzAsImV4cCI6MTczMjQ4NDMzMH0.s1F1IhbzwAkEpzfwQcZlMQiZK625tQEZf6mA-UYF4u4
 Content-Type: application/json
 
 {
-    "storeName": "TiendaAdmin",
-    "CIF": "A12345678",
-    "address": "Calle del Comercio, 100, Madrid",
-    "email": "contacto@tiendaadmin.com",
-    "contactNumber": "+34 600 123 456",
-    "pageId": 432452
+    "storeName": "Tienda Animales",
+    "CIF": "A23523",
+    "address": "Calle Mirasuegros 33, Madrid",
+    "email": "contacto@tiendaanimales.com",
+    "contactNumber": "+34 632 252 234",
+    "pageId": 53453
 }
 
 ### Obtener todos los comercios
 GET http://localhost:3000/api/store?order=true
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI1NzEyMmM2NDg2NjMxYWI2NzMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA0ODEwNjAsImV4cCI6MTczMDQ4ODI2MH0.vMKxlmIVo6zHUHWjmo0Uqzlc2KzJtU2ajnT9r-1Fwkk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzQzNWY0YmE0Zjc5MTgzN2E4NTJmYmQiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzI0Nzc1NjQsImV4cCI6MTczMjQ4NDc2NH0.FJgp99lfDisTAytktCnI2ntd0LDF7GZ6MiZ3fUBYVR4
 Content-Type: application/json
 
 ### Obtener un comercio específico por su CIF
-GET http://localhost:3000/api/store/A12345678
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI1NzEyMmM2NDg2NjMxYWI2NzMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA0ODEwNjAsImV4cCI6MTczMDQ4ODI2MH0.vMKxlmIVo6zHUHWjmo0Uqzlc2KzJtU2ajnT9r-1Fwkk
+GET http://localhost:3000/api/store/C2352341
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzQzNWY0YmE0Zjc5MTgzN2E4NTJmYmQiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzI0NjkyNDIsImV4cCI6MTczMjQ3NjQ0Mn0.XcIHg1wuS54iBLVKCcqx91xztynuKBaHpKpI-zxxLhY
 Content-Type: application/json
 
 ### Modificar comercio (solo accesible por admin)
-PUT http://localhost:3000/api/store/A12345678
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI1NzEyMmM2NDg2NjMxYWI2NzMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA0ODEwNjAsImV4cCI6MTczMDQ4ODI2MH0.vMKxlmIVo6zHUHWjmo0Uqzlc2KzJtU2ajnT9r-1Fwkk
+PUT http://localhost:3000/api/store/C2352341
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzQzNWY0YmE0Zjc5MTgzN2E4NTJmYmQiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzI0NjkyNDIsImV4cCI6MTczMjQ3NjQ0Mn0.XcIHg1wuS54iBLVKCcqx91xztynuKBaHpKpI-zxxLhY
 Content-Type: application/json
 
 {
-  "adress": "Avenida del Comercio, 150, Madrid",
+  "adress": "Avenida del Comercio, 150, Barcelona",
   "contactNumber": "+34 600 123 789"
 }
 
 ### Eliminar comercio por CIF [Borrado Lógico]
-DELETE http://localhost:3000/api/store/A12345678?deleteType=logical
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI1NzEyMmM2NDg2NjMxYWI2NzMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA0ODEwNjAsImV4cCI6MTczMDQ4ODI2MH0.vMKxlmIVo6zHUHWjmo0Uqzlc2KzJtU2ajnT9r-1Fwkk
+DELETE http://localhost:3000/api/store/A23523?deleteType=logical
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzQzNWY0YmE0Zjc5MTgzN2E4NTJmYmQiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzI0NjkyNDIsImV4cCI6MTczMjQ3NjQ0Mn0.XcIHg1wuS54iBLVKCcqx91xztynuKBaHpKpI-zxxLhY
 Content-Type: application/json
 
 # ===================== GESTIÓN DE PÁGINA WEB DE COMERCIO ===================== #
 
 ### Crear una página web de comercio (solo accesible por admin)
 POST http://localhost:3000/api/webStore
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI1NzEyMmM2NDg2NjMxYWI2NzMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA0ODEwNjAsImV4cCI6MTczMDQ4ODI2MH0.vMKxlmIVo6zHUHWjmo0Uqzlc2KzJtU2ajnT9r-1Fwkk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzQzNWY0YmE0Zjc5MTgzN2E4NTJmYmQiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzI0NzcxMzAsImV4cCI6MTczMjQ4NDMzMH0.s1F1IhbzwAkEpzfwQcZlMQiZK625tQEZf6mA-UYF4u4
 Content-Type: application/json
 
 {
     "city": "Madrid",
-    "activity": "Venta de tecnología",
-    "title": "Tech Store",
-    "resume": "La mejor tecnología a tu alcance.",
-    "textsArray": ["Gadgets de última generación", "Ofertas especiales"],
-    "imagesArray": ["http://example.com/tech1.jpg", "http://example.com/tech2.jpg"],
+    "activity": "Tienda de animales",
+    "title": "Tienda Animales",
+    "resume": "Las mejores mascotas.",
+    "textsArray": ["Mascotas especiales", "Mascotas"],
+    "imagesArray": ["http://example.com/mascotin1.jpg", "http://example.com/animalia.jpg"],
     "reviews": {
-        "scoring": 4.7,
-        "totalRatings": 85,
-        "reviews": ["Excelente calidad", "Buen servicio"]
+        "scoring": 4.9,
+        "totalRatings": 25,
+        "reviews": ["Excelentes animales", "Buen servicio"]
     },
-    "storeId": "A12345678"
+    "storeId": "53453"
 }
 
 ### Obtener todas las páginas web de comercio
 GET http://localhost:3000/api/webStore
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI1NzEyMmM2NDg2NjMxYWI2NzMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA0ODEwNjAsImV4cCI6MTczMDQ4ODI2MH0.vMKxlmIVo6zHUHWjmo0Uqzlc2KzJtU2ajnT9r-1Fwkk
-Content-Type: application/json
+
+### Obtener página web de comercio por su id
+GET http://localhost:3000/api/webStore/67435f4ba4f791837a852fbd
 
 ### Modificar una página web por su storeId (solo accesible por el comercio propietario)
 PUT http://localhost:3000/api/webStore/670e8628a4ae3d3c6a823592
@@ -123,8 +124,8 @@ Content-Type: application/json
 }
 
 ### Subir imagen a la página web (solo accesible por el comercio propietario)
-PATCH http://localhost:3000/api/webStore/6717d67082e66136791ec1e7
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI1NzEyMmM2NDg2NjMxYWI2NzMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA0ODQzNzMsImV4cCI6MTczMDQ5MTU3M30.UBdwhCfb8T990pcDJW5WMfPYFQS0pz2kZ1oczOSApG0
+PATCH http://localhost:3000/api/webStore/67436399d6583700e9e82980
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzQzNjM5OWQ2NTgzNzAwZTllODI5ODAiLCJpYXQiOjE3MzI0Njk2NTcsImV4cCI6MTczMjQ3Njg1N30.hlNi06jpEz5I4XjleVdjAdq1KYlEyQ_hxkHY9P6Y5pw
 Content-Type: multipart/form-data; boundary=Boundry
 
 --Boundry
@@ -142,8 +143,8 @@ Content-Type: application/json
 # ===================== OPERACIONES CON USUARIOS ===================== #
 
 ### Modificar datos del usuario básico (requiere token)
-PUT http://localhost:3000/api/user
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI1NzEyMmM2NDg2NjMxYWI2NzMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA0ODEwNjAsImV4cCI6MTczMDQ4ODI2MH0.vMKxlmIVo6zHUHWjmo0Uqzlc2KzJtU2ajnT9r-1Fwkk
+PUT http://localhost:3002/api/user
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI4YTEyMmM2NDg2NjMxYWI2NzUiLCJyb2xlIjoidXNlciIsImlhdCI6MTczMjIxMTM2OSwiZXhwIjoxNzMyMjE4NTY5fQ.yDxN68dLomWmXi-za9ah6uJ2jQ_xuH09DvDpyv8jccc
 Content-Type: application/json
 
 {
@@ -160,3 +161,67 @@ Content-Type: application/json
 GET http://localhost:3000/api/store/67251492251f3b3d4cd814a3/interested-users
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzI0ZTI1NzEyMmM2NDg2NjMxYWI2NzMiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzA0ODEwNjAsImV4cCI6MTczMDQ4ODI2MH0.vMKxlmIVo6zHUHWjmo0Uqzlc2KzJtU2ajnT9r-1Fwkk
 Content-Type: application/json
+
+
+
+###=================================================
+
+POST http://localhost:3000/api/user/register-merchant
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzQzNWY0YmE0Zjc5MTgzN2E4NTJmYmQiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzI0NzczMzUsImV4cCI6MTczMjQ4NDUzNX0.qh_ofwpB5D1RMNz1ge7LBjW9nokYljFfAx6iF7Yyndg
+Content-Type: application/json
+
+{
+    "nombre": "Comercio XYZ",
+    "email": "comercioxyz@example.com",
+    "password": "Password123",
+    "edad": 35,
+    "ciudad": "Madrid"
+}
+
+
+### Crear store para el merchant (como admin)
+POST http://localhost:3000/api/store
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzQzNWY0YmE0Zjc5MTgzN2E4NTJmYmQiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzI0ODI4NjksImV4cCI6MTczMjQ5MDA2OX0.eoAQVbz_CSjl7kIpd0-Nnz_mGlOm9Cm-WlUGq2wBJEA
+Content-Type: application/json
+
+{
+    "storeName": "Comercio XYZ",
+    "CIF": "B12345678",
+    "address": "Calle Falsa 123, Madrid",
+    "email": "contacto@comercioxyz.com",
+    "contactNumber": "+34 600 123 456",
+    "merchantId": "67439410405d0e77e61cfd73"
+}
+
+### Login del merchant
+POST http://localhost:3000/api/user/login
+Content-Type: application/json
+
+{
+    "email": "comercioxyz@example.com",
+    "password": "Password123"
+}
+
+### Operaciones del merchant sobre su webstore
+POST http://localhost:3000/api/webStore
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzQzOTQxMDQwNWQwZTc3ZTYxY2ZkNzMiLCJyb2xlIjoibWVyY2hhbnQiLCJpYXQiOjE3MzI0ODM3NzUsImV4cCI6MTczMjQ5MDk3NX0.c9wS5JePi52gcHo8rN8rOr46Y5kGt9ENdkKIJBoKDpc
+Content-Type: application/json
+
+{
+    "city": "Madrid",
+    "activity": "Venta de electrónicos",
+    "title": "Comercio XYZ Electrónicos",
+    "resume": "Los mejores productos electrónicos al mejor precio.",
+    "textsArray": ["Texto adicional 1", "Texto adicional 2"],
+    "imagesArray": ["http://example.com/image1.jpg"]
+}
+
+###
+PUT http://localhost:3000/api/webStore/67439ffd728e1b7c7ec5311a
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzQzOTQxMDQwNWQwZTc3ZTYxY2ZkNzMiLCJyb2xlIjoibWVyY2hhbnQiLCJpYXQiOjE3MzI0ODUxNDAsImV4cCI6MTczMjQ5MjM0MH0.0WP4AmpjGrDn6XM6qJyg9vEpokARUeHGhlEQbfj6kEA
+Content-Type: application/json
+
+{
+    "title": "Comercio ABC Restaurante actualizado",
+    "resume": "Ahora con platos ricos e internacionales."
+}

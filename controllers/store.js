@@ -1,6 +1,7 @@
 const { tokenSign } = require("../utils/handleJwt");
 const { storeModel } = require('../models');
 const { userModel } = require("../models");
+const { webStoreModel } = require("../models");
 const handleHttpError = require("../utils/handleHttpError");
 
 // Obtener comercios
@@ -36,19 +37,42 @@ const getStore = async (req, res) => {
 //         handleHttpError(res, "ERROR_CREATING_STORE");
 //     }
 // };
+// const createStore = async (req, res) => {
+//     try {
+//         const { body } = req;
+//         console.log("Datos recibidos para crear comercio:", body); // Datos enviados
+
+//         const store = await storeModel.create(body); // Crear el comercio
+
+//         // Generar un JWT específico para el comercio
+//         const token = tokenSign({ _id: store._id, CIF: store.CIF });
+//         res.send({ store, token }); // Enviar el comercio y el token
+//     } catch (error) {
+//         console.error("Error en createStore:", error.message); // Muestra el mensaje de error específico
+//         console.error("Detalle del error:", error.errors); // Muestra los detalles de error de validación
+//         handleHttpError(res, "ERROR_CREATING_STORE");
+//     }
+// };
+
 const createStore = async (req, res) => {
     try {
         const { body } = req;
-        console.log("Datos recibidos para crear comercio:", body); // Datos enviados
 
-        const store = await storeModel.create(body); // Crear el comercio
+        const merchantId = body.merchantId; // El admin debe proporcionar el merchantId
+        const merchantUser = await userModel.findById(merchantId);
+        if (!merchantUser || merchantUser.role !== 'merchant') {
+            return handleHttpError(res, "MERCHANT_ID_INVALIDO", 400);
+        }
 
-        // Generar un JWT específico para el comercio
-        const token = tokenSign({ _id: store._id, CIF: store.CIF });
-        res.send({ store, token }); // Enviar el comercio y el token
+        // Verificar que el merchant no tenga ya un store
+        const existingStore = await storeModel.findOne({ merchantId });
+        if (existingStore) {
+            return handleHttpError(res, "EL_MERCHANT_YA_TIENE_UN_STORE", 400);
+        }
+
+        const store = await storeModel.create({ ...body, merchantId });
+        res.send({ store });
     } catch (error) {
-        console.error("Error en createStore:", error.message); // Muestra el mensaje de error específico
-        console.error("Detalle del error:", error.errors); // Muestra los detalles de error de validación
         handleHttpError(res, "ERROR_CREATING_STORE");
     }
 };
@@ -77,18 +101,48 @@ const deleteStore = async (req, res) => {
 
 const getInterestedUserEmails = async (req, res) => {
     try {
-        const { storeId } = req.params;
+        const merchantId = req.user._id; // Obtener el ID del merchant autenticado
+        const { topic } = req.query; // Obtener el tema de interés de los query parameters
 
-        // Verificar que el storeId es válido y realizar la búsqueda
+        if (!topic) {
+            return handleHttpError(res, "TOPIC_REQUIRED", 400);
+        }
+
+        // Obtener el store asociado al merchant
+        const store = await storeModel.findOne({ merchantId });
+        if (!store) {
+            return handleHttpError(res, "STORE_NOT_FOUND", 404);
+        }
+
+        // Obtener el webStore asociado al store
+        const webStore = await webStoreModel.findOne({ storeId: store._id });
+        if (!webStore) {
+            return handleHttpError(res, "WEBSTORE_NOT_FOUND", 404);
+        }
+
+        const storeCity = webStore.city;
+
+        if (!storeCity) {
+            return handleHttpError(res, "STORE_CITY_NOT_FOUND", 400);
+        }
+
+        // Agregar logs para depuración
+        console.log('Ciudad del comercio:', storeCity);
+        console.log('Tema de interés:', topic);
+
+        // Buscar usuarios en la misma ciudad, interesados en el tema y que permiten recibir ofertas
         const interestedUsers = await userModel.find({
-            permiteRecibirOfertas: true,
-            intereses: storeId
+            ciudad: storeCity,
+            intereses: topic,
+            permiteRecibirOfertas: true
         }).select('email');
-        
+
+        console.log('Usuarios interesados encontrados:', interestedUsers);
+
         res.send(interestedUsers);
 
     } catch (error) {
-        console.error("Error en getInterestedUsers:", error);
+        console.error("Error en getInterestedUserEmails:", error);
         handleHttpError(res, "ERROR_GETTING_INTERESTED_USERS");
     }
 };

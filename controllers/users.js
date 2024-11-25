@@ -15,14 +15,11 @@ const handleHttpError = require("../utils/handleHttpError");
 const updateUser = async (req, res) => {
     try {
         const body = matchedData(req); // Datos validados y limpiados
-        console.log("Datos para actualizar:", body); // Log para verificar los datos recibidos
 
         const user = await userModel.findByIdAndUpdate(req.user._id, body, { new: true });
-        console.log("Usuario actualizado:", user); // Log para verificar si se actualiza el usuario
         
         res.send({ user });
     } catch (error) {
-        console.log("Error en updateUser:", error); // Log para ver el error exacto
         handleHttpError(res, "ERROR_UPDATE_USER");
     }
 };

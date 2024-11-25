@@ -9,7 +9,7 @@ const UserSchema = new mongoose.Schema({
     ciudad: { type: String },
     intereses: { type: [String], default: [] },
     permiteRecibirOfertas: { type: Boolean, default: false },
-    role: { type: String, enum: ['user', 'admin'], default: 'user' }
+    role: { type: String, enum: ['user', 'admin', 'merchant'], default: 'user' }
 }, { timestamps: true, versionKey: false });
 
 // Middleware para hashear la contraseña antes de guardar

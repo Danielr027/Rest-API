@@ -129,4 +129,39 @@ const validatorDeleteWebStore = [
     (req, res, next) => validateResults(req, res, next)
 ];
 
-module.exports = { validatorCreateWebStore, validatorGetWebStore, validatorUpdateWebStore, validatorArchiveWebStore, validatorDeleteWebStore };
+// Validador para añadir una review a la web
+const validatorAddReview = [
+    param("storeId")
+        .exists().withMessage("El parámetro storeId es requerido")
+        .notEmpty().withMessage("El parámetro storeId no puede estar vacío")
+        .isMongoId().withMessage("El parámetro storeId debe ser un MongoID válido"),
+
+    check("scoring")
+        .exists().withMessage("La puntuación es requerida")
+        .notEmpty().withMessage("La puntuación no puede estar vacía")
+        .isFloat({ min: 0, max: 5 }).withMessage("La puntuación debe ser un número entre 0 y 5"),
+
+    check("review")
+        .exists().withMessage("La reseña es requerida")
+        .notEmpty().withMessage("La reseña no puede estar vacía")
+        .isString().withMessage("La reseña debe ser una cadena de texto"),
+
+    (req, res, next) => validateResults(req, res, next)
+];
+
+// Validador para añadir texto a la web
+const validatorAddText = [
+    param("storeId")
+        .exists().withMessage("El parámetro storeId es requerido")
+        .notEmpty().withMessage("El parámetro storeId no puede estar vacío")
+        .isMongoId().withMessage("El parámetro storeId debe ser un MongoID válido"),
+    
+    check("text")
+        .exists().withMessage("El texto es requerido")
+        .notEmpty().withMessage("El texto no puede estar vacío")
+        .isString().withMessage("El texto debe ser una cadena de texto"),
+    
+    (req, res, next) => validateResults(req, res, next)
+];
+
+module.exports = { validatorCreateWebStore, validatorGetWebStore, validatorUpdateWebStore, validatorArchiveWebStore, validatorDeleteWebStore, validatorAddReview, validatorAddText };

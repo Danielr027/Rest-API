@@ -28,11 +28,6 @@ const validatorCreateStore = [
         .notEmpty().withMessage("El número de contacto no puede estar vacío")
         .isString().withMessage("El número de contacto debe ser una cadena de texto"),
     
-    check("pageId")
-        .exists().withMessage("El ID de la página es requerido")
-        .notEmpty().withMessage("El ID de la página no puede estar vacío")
-        .isNumeric().withMessage("El ID de la página debe ser un número"),
-    
     (req, res, next) => validateResults(req, res, next)
 ];
 
@@ -68,10 +63,11 @@ const validatorUpdateStore = [
     check("contactNumber")
         .optional()
         .isString().withMessage("El número de contacto debe ser una cadena de texto"),
-    
-    check("pageId")
-        .optional()
-        .isMongoId().withMessage("El ID de la página debe ser un MongoID válido"),
+
+    check("merchantId")
+    .exists().withMessage("El ID del merchant es requerido")
+    .notEmpty().withMessage("El ID del merchant no puede estar vacío")
+    .isMongoId().withMessage("El ID del merchant debe ser un MongoID válido"),
     
     (req, res, next) => validateResults(req, res, next)
 ];

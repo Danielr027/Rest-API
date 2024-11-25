@@ -4,18 +4,24 @@ const { encrypt, compare } = require("../utils/handlePassword");
 const { tokenSign } = require("../utils/handleJwt");
 const handleHttpError = require("../utils/handleHttpError");
 
-// const registerCtrl = async (req, res) => {
-//     try {
-//         const body = matchedData(req);
-//         const password = await encrypt(body.password);
-//         const user = await userModel.create({ ...body, password });
-//         user.set('password', undefined, { strict: false });
-//         res.send({ token: await tokenSign(user), user });
-//     } catch (error) {
-//         console.log("Error en registerCtrl:", error);
-//         handleHttpError(res, "ERROR_REGISTER_USER");
-//     }
-// };
+const registerMerchantCtrl = async (req, res) => {
+    try {
+        const body = matchedData(req);
+
+        // Asignar el rol 'merchant' sin hashear la contraseña manualmente
+        const user = await userModel.create({ ...body, role: 'merchant' });
+
+        user.set('password', undefined, { strict: false });
+
+        res.send({ message: 'Merchant registrado exitosamente', user });
+    } catch (error) {
+        if (error.code === 11000) {
+            return handleHttpError(res, "EMAIL_ALREADY_REGISTERED", 409);
+        }
+        console.log("Error en registerMerchantCtrl:", error);
+        handleHttpError(res, "ERROR_REGISTER_MERCHANT");
+    }
+};
 
 const registerCtrl = async (req, res) => {
     try {
@@ -36,38 +42,18 @@ const registerCtrl = async (req, res) => {
 };
 
 
-// const loginCtrl = async (req, res) => {
-//     try {
-//         const body = matchedData(req);
-//         const user = await userModel.findOne({ email: body.email }).select("password email role");
-//         if (!user) return handleHttpError(res, "USER_NOT_FOUND", 404);
-        
-//         const isValidPassword = await compare(body.password, user.password);
-//         if (!isValidPassword) return handleHttpError(res, "INVALID_PASSWORD", 401);
-        
-//         user.set("password", undefined, { strict: false });
-//         res.send({ token: await tokenSign(user), user });
-//     } catch (error) {
-//         handleHttpError(res, "ERROR_LOGIN_USER");
-//     }
-// };
-
 const loginCtrl = async (req, res) => {
     try {
         const body = matchedData(req);
         const user = await userModel.findOne({ email: body.email }).select("password email role");
         if (!user) return handleHttpError(res, "USER_NOT_FOUND", 404);
 
-        console.log("Contraseña ingresada:", body.password);
-        console.log("Contraseña hasheada en la BD:", user.password);
-
         const isValidPassword = await compare(body.password, user.password);
-        console.log("¿Las contraseñas coinciden?", isValidPassword);  // Log para diagnosticar
-
         if (!isValidPassword) return handleHttpError(res, "INVALID_PASSWORD", 401);
 
         user.set("password", undefined, { strict: false });
-        res.send({ token: await tokenSign(user), user });
+        const token = await tokenSign(user);
+        res.send({ token, user });
     } catch (error) {
         console.log("Error en loginCtrl:", error);
         handleHttpError(res, "ERROR_LOGIN_USER");
@@ -76,4 +62,5 @@ const loginCtrl = async (req, res) => {
 
 
 
-module.exports = { registerCtrl, loginCtrl };
+
+module.exports = { registerCtrl, loginCtrl, registerMerchantCtrl };

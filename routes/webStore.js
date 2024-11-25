@@ -10,8 +10,8 @@ const router = express.Router();
 const authMiddleware = require("../middlewares/session");
 const checkRole = require("../middlewares/role");
 const uploadMiddleware = require("../utils/handleStorage");
-const { validatorCreateWebStore, validatorGetWebStore, validatorUpdateWebStore, validatorDeleteWebStore } = require("../validators/webStore");
-const { getWebStores, getWebStore, createWebStore, updateWebStore, deleteWebStore, uploadImage } = require("../controllers/webStore");
+const { validatorCreateWebStore, validatorGetWebStore, validatorUpdateWebStore, validatorDeleteWebStore, validatorAddReview, validatorAddText } = require("../validators/webStore");
+const { getWebStores, getWebStore, createWebStore, updateWebStore, deleteWebStore, uploadImage, addReview, addText } = require("../controllers/webStore");
 
 /**
  * @swagger
@@ -25,7 +25,7 @@ const { getWebStores, getWebStore, createWebStore, updateWebStore, deleteWebStor
  *       200:
  *         description: Lista de páginas web de los comercios
  */
-router.get("/", authMiddleware, getWebStores);
+router.get("/", getWebStores);
 
 /**
  * @swagger
@@ -45,7 +45,7 @@ router.get("/", authMiddleware, getWebStores);
  *       200:
  *         description: Página web de comercio creada exitosamente
  */
-router.post("/", authMiddleware, validatorCreateWebStore, createWebStore);
+router.post("/", authMiddleware, checkRole(["merchant"]), validatorCreateWebStore, createWebStore);
 
 /**
  * @swagger
@@ -66,7 +66,7 @@ router.post("/", authMiddleware, validatorCreateWebStore, createWebStore);
  *       200:
  *         description: Página web de comercio encontrada
  */
-router.get("/:storeId", authMiddleware, validatorGetWebStore, getWebStore);
+router.get("/:storeId", validatorGetWebStore, getWebStore);
 
 /**
  * @swagger
@@ -93,7 +93,7 @@ router.get("/:storeId", authMiddleware, validatorGetWebStore, getWebStore);
  *       200:
  *         description: Página web de comercio actualizada
  */
-router.put("/:storeId", authMiddleware, validatorUpdateWebStore, updateWebStore);
+router.put("/:storeId", authMiddleware, checkRole(["merchant"]), validatorUpdateWebStore, updateWebStore);
 
 /**
  * @swagger
@@ -114,7 +114,7 @@ router.put("/:storeId", authMiddleware, validatorUpdateWebStore, updateWebStore)
  *       200:
  *         description: Página web de comercio eliminada
  */
-router.delete("/:storeId", authMiddleware, validatorDeleteWebStore, deleteWebStore);
+router.delete("/:storeId", authMiddleware, checkRole(["merchant"]), validatorDeleteWebStore, deleteWebStore);
 
 /**
  * @swagger
@@ -145,6 +145,10 @@ router.delete("/:storeId", authMiddleware, validatorDeleteWebStore, deleteWebSto
  *       200:
  *         description: Imagen subida exitosamente
  */
-router.patch("/:storeId/uploadImage", authMiddleware, checkRole(['admin']), validatorGetWebStore, uploadMiddleware.single("image"), uploadImage);
+router.patch("/:storeId/uploadImage", authMiddleware, checkRole(['merchant']), validatorGetWebStore, uploadMiddleware.single("image"), uploadImage);
+
+router.patch("/:storeId/review", authMiddleware, checkRole(['user', 'merchant', 'admin']), validatorAddReview, addReview);
+
+router.post("/:storeId/addText", authMiddleware, checkRole(['merchant']), validatorAddText, addText);
 
 module.exports = router;

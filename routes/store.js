@@ -134,6 +134,6 @@ router.delete("/:CIF", authMiddleware, checkRole(["admin"]), validatorDeleteStor
  *       200:
  *         description: Lista de emails de usuarios interesados
  */
-router.get("/:storeId/interested-users", authMiddleware, checkRole(['admin']), getInterestedUserEmails);
+router.get("/:storeId/interested-users", authMiddleware, checkRole(['merchant']), getInterestedUserEmails);
 
 module.exports = router;

@@ -7,7 +7,8 @@
 
 const express = require("express");
 const router = express.Router();
-const { registerCtrl, loginCtrl } = require("../controllers/auth");
+const checkRole = require('../middlewares/role');
+const { registerCtrl, loginCtrl, registerMerchantCtrl } = require("../controllers/auth");
 const { updateUser, deleteUser } = require("../controllers/users");
 const { validatorRegister, validatorLogin, validatorUpdateUser } = require("../validators/user");
 const authMiddleware = require("../middlewares/session");
@@ -86,5 +87,8 @@ router.put("/", authMiddleware, validatorUpdateUser, updateUser);
  *         description: Usuario eliminado exitosamente
  */
 router.delete("/", authMiddleware, deleteUser);
+
+router.post("/register-merchant", authMiddleware, checkRole(["admin"]), validatorRegister, registerMerchantCtrl);
+
 
 module.exports = router;

@@ -15,9 +15,11 @@ const authMiddleware = async (req, res, next) => {
         if (!dataToken || !dataToken._id) return handleHttpError(res, "INVALID_TOKEN", 401);
 
         // Buscar el usuario en la base de datos
-        req.user = await userModel.findById(dataToken._id);
-        console.log("Usuario encontrado:", req.user); // Depuración
-        if (!req.user) return handleHttpError(res, "USER_NOT_FOUND", 404);
+        const user = await userModel.findById(dataToken._id);
+        console.log("Usuario encontrado:", user); // Depuración
+        if (!user) return handleHttpError(res, "USER_NOT_FOUND", 404);
+
+        req.user = user; // Asignamos el usuario completo a req.user
 
         next();
     } catch (error) {
@@ -25,5 +27,6 @@ const authMiddleware = async (req, res, next) => {
         handleHttpError(res, "NOT_AUTHORIZED", 403);
     }
 };
+
 
 module.exports = authMiddleware;

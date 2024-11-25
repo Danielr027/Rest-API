@@ -5,10 +5,10 @@ const StoreSchema = new mongoose.Schema(
     {
         storeName: { type: String },
         CIF: { type: String },
-        adress: { type: String },
+        address: { type: String },
         email: { type: String },
         contactNumber: { type: String },
-        pageId: { type: Number }
+        merchantId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, unique: true }
     },
     { timestamps: true, versionKey: false }
 );
