@@ -89,7 +89,7 @@ router.post("/", authMiddleware, checkRole(["admin"]), validatorCreateStore, cre
  *       404:
  *         description: Comercio no encontrado
  */
-router.get("/:CIF", authMiddleware, validatorGetStore, getStore);
+router.get("/getByCIF/:CIF", authMiddleware, validatorGetStore, getStore);
 
 /**
  * @swagger
@@ -189,6 +189,7 @@ router.delete("/:CIF", authMiddleware, checkRole(["admin"]), validatorDeleteStor
  *       404:
  *         description: Comercio o webStore no encontrado
  */
-router.get("/:storeId/interested-users", authMiddleware, checkRole(['merchant']), getInterestedUserEmails);
+router.get("/interested-users", authMiddleware, checkRole(['merchant']), getInterestedUserEmails);
+// router.get("/interested-users", (req, res) => { console.log("TEST"); res.send("TEST") });
 
 module.exports = router;

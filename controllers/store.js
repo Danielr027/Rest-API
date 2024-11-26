@@ -20,7 +20,7 @@ const getStores = async (req, res) => {
 // Obtener comercio por CIF
 const getStore = async (req, res) => {
     const { CIF } = req.params; // Obtenemos parámetros
-    const data = await storeModel.find({CIF: CIF});
+    const data = await storeModel.findOne({CIF: CIF});
     res.send(data);
 }
 
@@ -82,7 +82,9 @@ const createStore = async (req, res) => {
 const updateStore = async (req, res) => {
     const { CIF } = req.params; // Obtenemos los parámetros
     const { body } = req;
-    const data = await storeModel.findOneAndUpdate({CIF: CIF}, body);
+    console.log(`CIF: ${CIF}`);
+    console.log(`Body: ${body.adress}`);
+    const data = await storeModel.findOneAndUpdate({CIF: CIF}, body, { new: true });
     res.send(data);
 };
 
@@ -99,10 +101,58 @@ const deleteStore = async (req, res) => {
     }
 };
 
+// const getInterestedUserEmails = async (req, res) => {
+//     try {
+//         const merchantId = req.user._id; // Obtener el ID del merchant autenticado
+//         const { topic } = req.query; // Obtener el tema de interés de los query parameters
+
+//         if (!topic) {
+//             return handleHttpError(res, "TOPIC_REQUIRED", 400);
+//         }
+
+//         // Obtener el store asociado al merchant
+//         const store = await storeModel.findOne({ merchantId });
+//         if (!store) {
+//             return handleHttpError(res, "STORE_NOT_FOUND", 404);
+//         }
+
+//         // Obtener el webStore asociado al store
+//         const webStore = await webStoreModel.findOne({ storeId: store._id });
+//         if (!webStore) {
+//             return handleHttpError(res, "WEBSTORE_NOT_FOUND", 404);
+//         }
+
+//         const storeCity = webStore.city;
+
+//         if (!storeCity) {
+//             return handleHttpError(res, "STORE_CITY_NOT_FOUND", 400);
+//         }
+
+//         // Agregar logs para depuración
+//         console.log('Ciudad del comercio:', storeCity);
+//         console.log('Tema de interés:', topic);
+
+//         // Buscar usuarios en la misma ciudad, interesados en el tema y que permiten recibir ofertas
+//         const interestedUsers = await userModel.find({
+//             ciudad: storeCity,
+//             intereses: topic,
+//             permiteRecibirOfertas: true
+//         }).select('email');
+
+//         console.log('Usuarios interesados encontrados:', interestedUsers);
+
+//         res.send(interestedUsers);
+
+//     } catch (error) {
+//         console.error("Error en getInterestedUserEmails:", error);
+//         handleHttpError(res, "ERROR_GETTING_INTERESTED_USERS");
+//     }
+// };
+
 const getInterestedUserEmails = async (req, res) => {
     try {
-        const merchantId = req.user._id; // Obtener el ID del merchant autenticado
-        const { topic } = req.query; // Obtener el tema de interés de los query parameters
+        const merchantId = req.user._id;
+        const { topic } = req.query; 
 
         if (!topic) {
             return handleHttpError(res, "TOPIC_REQUIRED", 400);
@@ -126,10 +176,6 @@ const getInterestedUserEmails = async (req, res) => {
             return handleHttpError(res, "STORE_CITY_NOT_FOUND", 400);
         }
 
-        // Agregar logs para depuración
-        console.log('Ciudad del comercio:', storeCity);
-        console.log('Tema de interés:', topic);
-
         // Buscar usuarios en la misma ciudad, interesados en el tema y que permiten recibir ofertas
         const interestedUsers = await userModel.find({
             ciudad: storeCity,
@@ -137,12 +183,9 @@ const getInterestedUserEmails = async (req, res) => {
             permiteRecibirOfertas: true
         }).select('email');
 
-        console.log('Usuarios interesados encontrados:', interestedUsers);
-
         res.send(interestedUsers);
 
     } catch (error) {
-        console.error("Error en getInterestedUserEmails:", error);
         handleHttpError(res, "ERROR_GETTING_INTERESTED_USERS");
     }
 };

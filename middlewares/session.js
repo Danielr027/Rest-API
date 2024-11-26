@@ -10,13 +10,13 @@ const authMiddleware = async (req, res, next) => {
 
         // Verificar el token y obtener los datos decodificados
         const dataToken = await verifyToken(token);
-        console.log("Data del token:", dataToken); // Depuración
+        //console.log("Data del token:", dataToken); // Depuración
 
         if (!dataToken || !dataToken._id) return handleHttpError(res, "INVALID_TOKEN", 401);
 
         // Buscar el usuario en la base de datos
         const user = await userModel.findById(dataToken._id);
-        console.log("Usuario encontrado:", user); // Depuración
+        //console.log("Usuario encontrado:", user); // Depuración
         if (!user) return handleHttpError(res, "USER_NOT_FOUND", 404);
 
         req.user = user; // Asignamos el usuario completo a req.user
