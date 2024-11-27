@@ -19,14 +19,19 @@ app.use(express.static("./storage"));
 
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpecs));
 
-const port = process.env.PORT || 3000;
+// Condicionar la conexión a la BD y el inicio del servidor
+if (process.env.NODE_ENV !== 'test') {
+  const port = process.env.PORT || 3000;
 
-app.listen(port, () => {
-  // Ponemos al servidor a escuchar cambios en el puerto
-  console.log("Servidor escuchando en el puerto " + port);
-});
+  // Conexión a la base de datos
+  dbConnect();
 
-dbConnect();
+  // Iniciar el servidor
+  app.listen(port, () => {
+    // Ponemos al servidor a escuchar cambios en el puerto
+    console.log("Servidor escuchando en el puerto " + port);
+  });
+}
 
 const loggerStream = {
   write: (message) => {

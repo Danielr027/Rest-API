@@ -1,20 +1,20 @@
 # ===================== CREACIÓN DE USUARIOS Y LOGIN ===================== #
 
-@adminAuthToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzQ1ZjE4ZGIxNDY3OGJjYzhmZjI3ZDciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzI2MzcwOTksImV4cCI6MTczMjY0NDI5OX0.sKkqf1ItmbSZQMIc9A9TONudid6FQ4kdCA3n1e_mw0s
+@adminAuthToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzQ1ZjE4ZGIxNDY3OGJjYzhmZjI3ZDciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzI3MTc5MTYsImV4cCI6MTczMjcyNTExNn0._FgW2dt3kP5iBAfdJhaitpFWCRpfz1pRTHwSku1xwug
 @merchandId = 6745f327b14678bcc8ff27ee
 
-@merchantToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzQ1ZjMyN2IxNDY3OGJjYzhmZjI3ZWUiLCJyb2xlIjoibWVyY2hhbnQiLCJpYXQiOjE3MzI2NDA3NzksImV4cCI6MTczMjY0Nzk3OX0.0OLEMeb8q5HoXEJ4U_Kl3DtocYouJ4ttZ2OwnKuljYc
+@merchantToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzQ1ZjMyN2IxNDY3OGJjYzhmZjI3ZWUiLCJyb2xlIjoibWVyY2hhbnQiLCJpYXQiOjE3MzI3MTgwNzAsImV4cCI6MTczMjcyNTI3MH0.e-euq_g0AQhFtzBGGuFm1BnHadDaT_-by8t9G_LUxeY
 
-@userToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzQ1ZjUxM2IxNDY3OGJjYzhmZjI4MTciLCJyb2xlIjoidXNlciIsImlhdCI6MTczMjYzNzk3OCwiZXhwIjoxNzMyNjQ1MTc4fQ.H_Va0HMilrCd3zFcrqOPZYPBzlasbr3PX0bZSGeqmQc
+@userToken = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzQ3MzBkMGNlYTYwMzcwMWFhMWU4NDkiLCJyb2xlIjoidXNlciIsImlhdCI6MTczMjcxODgzMCwiZXhwIjoxNzMyNzI2MDMwfQ.tF01H76h2HVIUuTuFIo4fSddMrkLkEEG6MQjoXIABl8
 
 ### Registro de usuario básico
 POST http://localhost:3000/api/user/register
 Content-Type: application/json
 
 {
-    "nombre": "Javier",
-    "email": "javier@gmail.com",
-    "password": "qwert",
+    "nombre": "Ricardo",
+    "email": "ricardo@gmail.com",
+    "password": "qwertyui",
     "edad": 19,
     "ciudad": "Barcelona",
     "intereses": ["cine", "música"],
@@ -26,7 +26,7 @@ POST http://localhost:3000/api/user/login
 Content-Type: application/json
 
 {
-    "email": "javier@gmail.com",
+    "email": "ricardo@gmail.com",
     "password": "qwertyui"
 }
 
@@ -167,11 +167,14 @@ GET http://localhost:3000/api/webStore
 ### Obtener todas las páginas web de comercio de una ciudad
 GET http://localhost:3000/api/webStore?city=Madrid
 
+### 
+GET http://localhost:3000/api/webStore?city=Madrid&activity=Mascotas
+
 ### Obtener página web de comercio por su id
-GET http://localhost:3000/api/webStore/6745f49bb14678bcc8ff280d
+GET http://localhost:3000/api/webStore/67472ed2cea603701aa1e82b
 
 ### Añadir review (usuarios registrados)
-PATCH http://localhost:3000/api/webStore/6745f49bb14678bcc8ff280d/review
+PATCH http://localhost:3000/api/webStore/67472ed2cea603701aa1e82b/review
 Authorization: {{userToken}}
 Content-Type: application/json
 
@@ -181,7 +184,7 @@ Content-Type: application/json
 }
 
 ### Modificar una página web por su id (solo accesible por el comercio propietario)
-PUT http://localhost:3000/api/webStore/6745f49bb14678bcc8ff280d
+PUT http://localhost:3000/api/webStore/6745f372b14678bcc8ff27f4
 Authorization: {{merchantToken}}
 Content-Type: application/json
 
@@ -191,7 +194,7 @@ Content-Type: application/json
 }
 
 ### Subir imagen a la página web (solo accesible por el comercio propietario)
-PATCH http://localhost:3000/api/webStore/6745f49bb14678bcc8ff280d/uploadImage
+PATCH http://localhost:3000/api/webStore/67472ed2cea603701aa1e82b/uploadImage
 Authorization: {{merchantToken}}
 Content-Type: multipart/form-data; boundary=Boundry
 
@@ -203,7 +206,7 @@ Content-Type: image/jpg
 --Boundry--
 
 ### Añadir texto a una web por su id (solo accesible por el comercio propietario)
-POST http://localhost:3000/api/webStore/6745f49bb14678bcc8ff280d/addText
+POST http://localhost:3000/api/webStore/67472ed2cea603701aa1e82b/addText
 Authorization: {{merchantToken}}
 Content-Type: application/json
 
@@ -212,6 +215,6 @@ Content-Type: application/json
 }
 
 ### Eliminar una página web de comercio por Id [Borrado Físico]
-DELETE http://localhost:3000/api/webStore/674457b7a810ee3ec60e9d3b
+DELETE http://localhost:3000/api/webStore/6745f372b14678bcc8ff27f4
 Authorization: {{merchantToken}}
 Content-Type: application/json

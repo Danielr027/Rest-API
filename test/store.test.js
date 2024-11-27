@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'test';
+
 const request = require('supertest');
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
@@ -5,19 +7,20 @@ const app = require('../app');
 
 let mongoServer;
 let adminToken = '';
+let merchantToken = '';
+let merchantId = '';
 let storeId = 'A23523'; // CIF del store
 
 beforeAll(async () => {
+  // Iniciar el servidor MongoDB en memoria
   mongoServer = await MongoMemoryServer.create();
   const uri = mongoServer.getUri();
 
-  await mongoose.connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  // Conectar Mongoose sin opciones obsoletas
+  await mongoose.connect(uri);
 
-  // Crear y login como admin para obtener token
-  await request(app)
+  // Crear y registrar un usuario admin
+  const adminRes = await request(app)
     .post('/api/user/register')
     .send({
       nombre: 'Administrador',
@@ -28,24 +31,52 @@ beforeAll(async () => {
       intereses: ['lectura', 'deporte'],
     });
 
-  // Actualizar rol a admin
+  // Actualizar el rol a admin
   const User = mongoose.model('User');
   await User.updateOne(
     { email: 'admin@example.com' },
     { role: 'admin' }
   );
 
-  const res = await request(app)
+  // Login como admin para obtener el token
+  const loginRes = await request(app)
     .post('/api/user/login')
     .send({
       email: 'admin@example.com',
       password: 'Admin1234',
     });
 
-  adminToken = res.body.token;
+  adminToken = loginRes.body.token;
+
+  // Crear y registrar un usuario merchant
+  const merchantRes = await request(app)
+    .post('/api/user/register-merchant')
+    .set('Authorization', `Bearer ${adminToken}`)
+    .send({
+      nombre: 'Merchant',
+      email: 'merchant@example.com',
+      password: 'Password123',
+      edad: 35,
+      ciudad: 'Madrid',
+    });
+
+  // Obtener el ID del merchant
+  const merchantUser = await User.findOne({ email: 'merchant@example.com' });
+  merchantId = merchantUser._id.toString();
+
+  // Login como merchant para obtener el token
+  const merchantLoginRes = await request(app)
+    .post('/api/user/login')
+    .send({
+      email: 'merchant@example.com',
+      password: 'Password123',
+    });
+
+  merchantToken = merchantLoginRes.body.token;
 });
 
 afterAll(async () => {
+  // Desconectar Mongoose y detener MongoMemoryServer
   await mongoose.disconnect();
   await mongoServer.stop();
 });
@@ -57,11 +88,11 @@ describe('Store Endpoints', () => {
       .set('Authorization', `Bearer ${adminToken}`)
       .send({
         storeName: 'Tienda Animales',
-        CIF: 'A23523',
+        CIF: storeId, // 'A23523'
         address: 'Calle Mirasuegros 33, Madrid',
         email: 'contacto@tiendaanimales.com',
         contactNumber: '+34 632 252 234',
-        merchantId: '67445668a810ee3ec60e9d2b',
+        merchantId: merchantId, // Utilizar el ID real del merchant
       });
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('storeName', 'Tienda Animales');
@@ -79,7 +110,7 @@ describe('Store Endpoints', () => {
 
   it('should get a specific store by CIF', async () => {
     const res = await request(app)
-      .get('/api/store/A23523')
+      .get(`/api/store/${storeId}`)
       .set('Authorization', `Bearer ${adminToken}`);
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('CIF', 'A23523');
@@ -88,12 +119,12 @@ describe('Store Endpoints', () => {
 
   it('should update a store by CIF', async () => {
     const res = await request(app)
-      .put('/api/store/A23523')
+      .put(`/api/store/${storeId}`)
       .set('Authorization', `Bearer ${adminToken}`)
       .send({
         address: 'Avenida del Comercio, 150, Barcelona',
         contactNumber: '+34 600 123 789',
-        merchantId: '67445668a810ee3ec60e9d2b',
+        merchantId: merchantId,
       });
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('address', 'Avenida del Comercio, 150, Barcelona');
@@ -102,7 +133,7 @@ describe('Store Endpoints', () => {
 
   it('should delete a store by CIF logically', async () => {
     const res = await request(app)
-      .delete('/api/store/A23523?deleteType=logical')
+      .delete(`/api/store/${storeId}?deleteType=logical`)
       .set('Authorization', `Bearer ${adminToken}`);
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('deletedCount', 1);
@@ -122,7 +153,20 @@ describe('Store Endpoints', () => {
         permiteRecibirOfertas: true,
       });
 
-    // Iniciar sesión como admin para crear un store y asociar
+    // Registrar otro usuario que no está interesado en 'cine'
+    await request(app)
+      .post('/api/user/register')
+      .send({
+        nombre: 'María',
+        email: 'maria@gmail.com',
+        password: 'password123',
+        edad: 28,
+        ciudad: 'Barcelona',
+        intereses: ['deporte'],
+        permiteRecibirOfertas: true,
+      });
+
+    // Crear un store asociado a un tema específico ('cine')
     const storeRes = await request(app)
       .post('/api/store')
       .set('Authorization', `Bearer ${adminToken}`)
@@ -132,7 +176,7 @@ describe('Store Endpoints', () => {
         address: 'Avenida del Cine, 45, Madrid',
         email: 'contacto@cinestar.com',
         contactNumber: '+34 600 456 789',
-        merchantId: '67445668a810ee3ec60e9d2b', // Poner id de merchant que exista
+        merchantId: merchantId, // Utilizar el ID real del merchant
       });
 
     expect(storeRes.statusCode).toEqual(200);
@@ -145,5 +189,6 @@ describe('Store Endpoints', () => {
     expect(res.statusCode).toEqual(200);
     expect(res.body).toBeInstanceOf(Array);
     expect(res.body).toContain('juan@gmail.com');
+    expect(res.body).not.toContain('maria@gmail.com');
   });
 });
